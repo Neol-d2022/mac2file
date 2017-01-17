@@ -99,7 +99,7 @@ int main(int argc, char **argv)
             free((*resB)->rssi);
             (*resB)->rssi = rssi;
             sscanf(channel, "%u", &freq);
-            *resB)->channel = freq2ch(freq);
+            (*resB)->channel = freq2ch(freq);
             free(mac);
 
             (*resB)->timestamp = time(0);
