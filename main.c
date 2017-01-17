@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     unsigned int n = 0, i, nr, c, freq;
     int timeout;
 
-    if (argc != 6)
+    if (argc != 7)
         return 1;
     if (sscanf(argv[4], "%u", &nr) != 1)
         return 1;
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
         if (!f)
             return -2;
         for (i = 0; i < n; i += 1)
-            fprintf(f, "%s\t%s\t%u\t%u\n", r[i].mac, r[i].rssi, (unsigned int)(r[i].timestamp), r[i].channel);
+            fprintf(f, "%s\t%s\t%u\t%u\t%s\n", r[i].mac, r[i].rssi, (unsigned int)(r[i].timestamp), r[i].channel, argv[6]);
         fclose(f);
 
         remove(argv[3]);
