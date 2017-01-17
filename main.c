@@ -90,6 +90,7 @@ int main (int argc, char** argv) {
             fprintf(f, "%s\t%s\t%u\n", r[i].mac, r[i].rssi, (unsigned int)(r[i].timestamp));
         fclose(f);
 
+        remove(argv[3]);
         if(rename(argv[1], argv[3])) { c += 1; if(c >= MAX_RETRY_COUNT) return -2; }
         else if(c) c = 0;
 
