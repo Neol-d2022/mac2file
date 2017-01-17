@@ -36,9 +36,11 @@ int main (int argc, char** argv) {
     size_t macLen, rssiLen;
     FILE *f;
     unsigned int n = 0, i, nr, c;
+    int timeout;
 
-    if(argc != 5) return 1;
+    if(argc != 6) return 1;
     if(sscanf(argv[4], "%u", &nr) != 1) return 1;
+    if(sscanf(argv[5], "%d", &timeout) != 1) return 1;
 
     c = 0;
     r = (RECORD*)malloc(sizeof(*r) * nr);
@@ -84,6 +86,15 @@ int main (int argc, char** argv) {
         }
         
         qsort(r, n, sizeof(r[0]), cmpR);
+        for(i = n - 1; i < n; i -= 1) {
+            if((time(0) - r[i].timestamp) > timeout) {
+                free(r[i].mac);
+                free(r[i].rssi);
+                n -= 1;
+            }
+            else break;
+        }
+        
         f = fopen(argv[2], "w");
         if(!f) return -2;
         for(i = 0; i < n; i += 1)
