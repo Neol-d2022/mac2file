@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     size_t macLen, rssiLen, channelLen;
     FILE *f;
     unsigned int n = 0, i, nr, c, freq;
-    int timeout;
+    int timeout, rssiA, rssiB;
 
     if (argc != 7)
         return 1;
@@ -96,10 +96,15 @@ int main(int argc, char **argv)
 
         if (resB)
         {
-            free((*resB)->rssi);
-            (*resB)->rssi = rssi;
-            sscanf(channel, "%u", &freq);
-            (*resB)->channel = freq2ch(freq);
+            sscanf((*resB)->rssi, "%d", &rssiA);
+            sscanf(rssi, "%d", &rssiB);
+            if(rssiB >= rssiA && (*resB)->timestamp == time(0)) {
+                free((*resB)->rssi);
+                (*resB)->rssi = rssi;
+                sscanf(channel, "%u", &freq);
+                (*resB)->channel = freq2ch(freq);
+            }
+            else free(rssi);
             free(mac);
 
             (*resB)->timestamp = time(0);
