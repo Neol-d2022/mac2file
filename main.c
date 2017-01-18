@@ -52,6 +52,7 @@ int main(int argc, char **argv)
     char *mac, *rssi, *p;
     size_t macLen, rssiLen, channelLen;
     FILE *f;
+    time_t ts;
     unsigned int n = 0, i, nr, c, freq;
     int timeout, rssiA, rssiB;
 
@@ -94,11 +95,12 @@ int main(int argc, char **argv)
         resB = (RECORD **)bsearch(&key, idxMac, n, sizeof(idxMac[0]), cmpI);
         free(key);
 
+        ts = time(0);
         if (resB)
         {
             sscanf((*resB)->rssi, "%d", &rssiA);
             sscanf(rssi, "%d", &rssiB);
-            if(rssiB >= rssiA && (*resB)->timestamp == time(0)) {
+            if((rssiB >= rssiA && (*resB)->timestamp == ts) || ts > (*resB)->timestamp) {
                 free((*resB)->rssi);
                 (*resB)->rssi = rssi;
                 sscanf(channel, "%u", &freq);
@@ -107,7 +109,7 @@ int main(int argc, char **argv)
             else free(rssi);
             free(mac);
 
-            (*resB)->timestamp = time(0);
+            (*resB)->timestamp = ts;
         }
         else
         {
@@ -120,7 +122,7 @@ int main(int argc, char **argv)
             }
             r[i].mac = mac;
             r[i].rssi = rssi;
-            r[i].timestamp = time(0);
+            r[i].timestamp = ts;
             sscanf(channel, "%u", &freq);
             r[i].channel = freq2ch(freq);
             n = i + 1;
